@@ -1,0 +1,62 @@
+""" IdeaVim plugins
+
+Plug 'easymotion/vim-easymotion'	# Requires IdeaVim-EasyMotion. Lots of mappings
+Plug 'tpope/vim-commentary'		    # [count]gc{motion}, o_gc, v_gc, gcc
+Plug 'tpope/vim-surround'		    # ys, cs, ds, S
+
+" Map Leader
+nnoremap <SPACE> <Nop>  
+let mapleader = ' '  
+let g:mapleader = ' '  
+let g:maplocalleader = ','  
+
+map Q gq
+
+set scrolloff=5
+set sidescrolloff=5
+
+set surround
+set commentary
+set ideajoin
+set ideamarks
+
+set hlsearch
+set visualbell
+set showmode
+
+set ignorecase
+set smartcase
+set relativenumber
+set number
+
+map <CR> :noh<CR>
+
+nmap <leader>gc :action GotoClass<CR>
+nmap <leader>gf :action GotoSymbol<CR>
+nmap <leader>gg :action GotoFile<CR>
+nmap <leader>ge :action RecentFiles<CR>
+nmap <leader>gs :action FileStructurePopup<CR>
+
+nmap gb <Action>(Back)
+nmap gf <Action>(Forward)
+
+nmap gd :action GotoDeclaration<CR>
+nmap gp :action QuickImplementations<CR>
+
+nmap <leader>r :action ShowUsages<CR>
+nmap <leader>R :action RenameElement<CR>
+
+nmap <leader>rl :action eslint.restart<CR>
+vmap <leader>rl :action eslint.restart<CR>
+
+nmap gh :action QuickJavaDoc<CR>
+vmap gh :action QuickJavaDoc<CR>
+
+nmap ,, :action ShowIntentionActions<CR>
+vmap ,, :action ShowIntentionActions<CR>
+
+nnoremap <leader>ee :action GotoNextError<CR>
+nnoremap <leader>er :action GotoPreviousError<CR>
+map / <Plug>(easymotion-sn)
+omap / <Plug>(easymotion-tn)
+
