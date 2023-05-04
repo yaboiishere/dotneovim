@@ -14,6 +14,9 @@ Plug 'williamboman/mason.nvim'
 Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'williamboman/nvim-lsp-installer'
 Plug 'onsails/lspkind.nvim'
+Plug 'elmcast/elm-vim'
+
+Plug 'towolf/vim-helm'
 " TypeScript extras
 Plug 'jose-elias-alvarez/null-ls.nvim'
 Plug 'MunifTanjim/prettier.nvim'
@@ -35,7 +38,6 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-treesitter/playground'
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 Plug 'p00f/nvim-ts-rainbow'
-
 
 " Misc. motions/text search
 Plug 'easymotion/vim-easymotion'
@@ -129,6 +131,9 @@ Plug 'vmchale/dhall-vim'
 
 " PureScript
 Plug 'purescript-contrib/purescript-vim'
+
+" Clojure
+Plug 'tpope/vim-fireplace'
 
 call plug#end()
 
@@ -266,3 +271,14 @@ set secure
 nnoremap <C-t> :NERDTreeToggle<CR>
 
 set nocompatible
+
+" Set completeopt to have a better completion experience
+set completeopt=menuone,noinsert,noselect
+
+" Avoid showing message extra message when using completion
+set shortmess+=c
+
+" Reserve space for the errors
+set signcolumn=yes
+
+let g:elm_format_autosave = 1

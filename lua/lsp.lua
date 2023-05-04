@@ -4,8 +4,8 @@ local lspconfig = require("lspconfig")
 
 local opts = { noremap = true, silent = true }
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, opts)
-vim.keymap.set("n", "<leader>ep", vim.diagnostic.goto_prev, opts)
-vim.keymap.set("n", "<leader>en", vim.diagnostic.goto_next, opts)
+vim.keymap.set("n", "<leader>eq", vim.diagnostic.goto_prev, opts)
+vim.keymap.set("n", "<leader>ee", vim.diagnostic.goto_next, opts)
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, opts)
 
 local telescope = require("telescope.builtin")
@@ -58,6 +58,25 @@ local on_attach = function(client, bufnr)
   vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, bufopts)
   vim.keymap.set("n", ",,", vim.lsp.buf.code_action, bufopts)
   vim.keymap.set("n", ",=", vim.lsp.buf.formatting, bufopts)
+
+  if client.resolved_capabilities.document_highlight then
+    vim.cmd [[
+      hi! LspReferenceRead cterm=bold ctermbg=235 guibg=LightYellow
+      hi! LspReferenceText cterm=bold ctermbg=235 guibg=LightYellow
+      hi! LspReferenceWrite cterm=bold ctermbg=235 guibg=LightYellow
+    ]]
+    vim.api.nvim_create_augroup('lsp_document_highlight', {})
+    vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+      group = 'lsp_document_highlight',
+      buffer = 0,
+      callback = vim.lsp.buf.document_highlight,
+    })
+    vim.api.nvim_create_autocmd('CursorMoved', {
+      group = 'lsp_document_highlight',
+      buffer = 0,
+      callback = vim.lsp.buf.clear_references,
+    })
+  end
 end
 
 local lsp_flags = {
@@ -99,6 +118,7 @@ lspconfig.eslint.setup { on_attach = on_attach, flags = lsp_flags, capabilities 
 lspconfig.elixirls.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 
 lspconfig.erlangls.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
+lspconfig.elmls.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 
 lspconfig.serve_d.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 
@@ -140,39 +160,42 @@ prettier.setup({
 })
 
 -- Lua
-vim.cmd [[autocmd BufWritePre *.lua lua vim.lsp.buf.formatting_sync()]]
+vim.cmd [[autocmd BufWritePre *.lua lua vim.lsp.buf.format()]]
 
 -- Haskell
-vim.cmd [[autocmd BufWritePre *.hs lua vim.lsp.buf.formatting_sync()]]
+vim.cmd [[autocmd BufWritePre *.hs lua vim.lsp.buf.format()]]
 
 -- PureScript
-vim.cmd [[autocmd BufWritePre *.purs lua vim.lsp.buf.formatting_sync()]]
+vim.cmd [[autocmd BufWritePre *.purs lua vim.lsp.buf.format()]]
 
 -- Erlang
--- vim.cmd [[autocmd BufWritePre *.erl lua vim.lsp.buf.formatting_sync()]]
--- vim.cmd [[autocmd BufWritePre *.hrl lua vim.lsp.buf.formatting_sync()]]
+vim.cmd [[autocmd BufWritePre *.erl lua vim.lsp.buf.format()]]
+vim.cmd [[autocmd BufWritePre *.hrl lua vim.lsp.buf.format()]]
 
 -- Elixir
-vim.cmd [[autocmd BufWritePre *.ex lua vim.lsp.buf.formatting_sync()]]
-vim.cmd [[autocmd BufWritePre *.exs lua vim.lsp.buf.formatting_sync()]]
+vim.cmd [[autocmd BufWritePre *.ex lua vim.lsp.buf.format()]]
+vim.cmd [[autocmd BufWritePre *.exs lua vim.lsp.buf.format()]]
 
 -- Rust
-vim.cmd [[autocmd BufWritePre *.rs lua vim.lsp.buf.formatting_sync()]]
+vim.cmd [[autocmd BufWritePre *.rs lua vim.lsp.buf.format()]]
 
 -- C
-vim.cmd [[autocmd BufWritePre *.c lua vim.lsp.buf.formatting_sync()]]
-vim.cmd [[autocmd BufWritePre *.h lua vim.lsp.buf.formatting_sync()]]
+vim.cmd [[autocmd BufWritePre *.c lua vim.lsp.buf.format()]]
+vim.cmd [[autocmd BufWritePre *.h lua vim.lsp.buf.format()]]
 
 -- C++
-vim.cmd [[autocmd BufWritePre *.cpp lua vim.lsp.buf.formatting_sync()]]
-vim.cmd [[autocmd BufWritePre *.hpp lua vim.lsp.buf.formatting_sync()]]
-vim.cmd [[autocmd BufWritePre *.cc lua vim.lsp.buf.formatting_sync()]]
-vim.cmd [[autocmd BufWritePre *.hh lua vim.lsp.buf.formatting_sync()]]
-vim.cmd [[autocmd BufWritePre *.cxx lua vim.lsp.buf.formatting_sync()]]
-vim.cmd [[autocmd BufWritePre *.hxx lua vim.lsp.buf.formatting_sync()]]
+vim.cmd [[autocmd BufWritePre *.cpp lua vim.lsp.buf.format()]]
+vim.cmd [[autocmd BufWritePre *.hpp lua vim.lsp.buf.format()]]
+vim.cmd [[autocmd BufWritePre *.cc lua vim.lsp.buf.format()]]
+vim.cmd [[autocmd BufWritePre *.hh lua vim.lsp.buf.format()]]
+vim.cmd [[autocmd BufWritePre *.cxx lua vim.lsp.buf.format()]]
+vim.cmd [[autocmd BufWritePre *.hxx lua vim.lsp.buf.format()]]
+
+-- Elm
+vim.cmd [[autocmd BufWritePre *.elm lua vim.lsp.buf.format()]]
 
 -- Rust
-vim.cmd [[autocmd BufWritePre *.rs lua vim.lsp.buf.formatting_sync()]]
+vim.cmd [[autocmd BufWritePre *.rs lua vim.lsp.buf.format()]]
 
 local disable_auto_formatting = function()
   vim.cmd [[autocmd WinEnter <buffer> set eventignore+=BufWritePre]]
