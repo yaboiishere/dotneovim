@@ -2,12 +2,6 @@ require("nvim-lsp-installer").setup {}
 
 local lspconfig = require("lspconfig")
 
-local opts = { noremap = true, silent = true }
-vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, opts)
-vim.keymap.set("n", "<leader>eq", vim.diagnostic.goto_prev, opts)
-vim.keymap.set("n", "<leader>ee", vim.diagnostic.goto_next, opts)
-vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, opts)
-
 local telescope = require("telescope.builtin")
 
 local null_ls = require("null-ls")
@@ -24,7 +18,7 @@ null_ls.setup({
     end
   end,
   sources = {
-    null_ls.builtins.formatting.black.with({ extra_args = { "--fast" } }),
+    null_ls.builtins.formatting.prettierd
   },
 })
 
@@ -40,13 +34,10 @@ local on_attach = function(client, bufnr)
   -- Mappings.
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   local bufopts = { noremap = true, silent = true, buffer = bufnr }
-  vim.keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts)
-  vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
   vim.keymap.set("n", "<localleader>r", telescope.lsp_references, bufopts)
   vim.keymap.set("n", "<localleader>S", telescope.lsp_document_symbols, bufopts)
   vim.keymap.set("n", "<localleader>s", telescope.lsp_workspace_symbols, bufopts)
   vim.keymap.set("n", "<localleader>d", telescope.diagnostics, bufopts)
-  vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
   vim.keymap.set("n", "gi", vim.lsp.buf.implementation, bufopts)
   vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, bufopts)
   vim.keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, bufopts)
@@ -54,29 +45,26 @@ local on_attach = function(client, bufnr)
   vim.keymap.set("n", "<leader>wl", function()
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, bufopts)
-  vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, bufopts)
-  vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, bufopts)
-  vim.keymap.set("n", ",,", vim.lsp.buf.code_action, bufopts)
   vim.keymap.set("n", ",=", vim.lsp.buf.formatting, bufopts)
 
-  if client.resolved_capabilities.document_highlight then
-    vim.cmd [[
-      hi! LspReferenceRead cterm=bold ctermbg=235 guibg=LightYellow
-      hi! LspReferenceText cterm=bold ctermbg=235 guibg=LightYellow
-      hi! LspReferenceWrite cterm=bold ctermbg=235 guibg=LightYellow
-    ]]
-    vim.api.nvim_create_augroup('lsp_document_highlight', {})
-    vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-      group = 'lsp_document_highlight',
-      buffer = 0,
-      callback = vim.lsp.buf.document_highlight,
-    })
-    vim.api.nvim_create_autocmd('CursorMoved', {
-      group = 'lsp_document_highlight',
-      buffer = 0,
-      callback = vim.lsp.buf.clear_references,
-    })
-  end
+  -- if client.resolved_capabilities.document_highlight then
+  --   vim.cmd [[
+  --     hi! LspReferenceRead cterm=bold ctermbg=235 guibg=LightYellow
+  --     hi! LspReferenceText cterm=bold ctermbg=235 guibg=LightYellow
+  --     hi! LspReferenceWrite cterm=bold ctermbg=235 guibg=LightYellow
+  --   ]]
+  --   vim.api.nvim_create_augroup('lsp_document_highlight', {})
+  --   vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+  --     group = 'lsp_document_highlight',
+  --     buffer = 0,
+  --     callback = vim.lsp.buf.document_highlight,
+  --   })
+  --   vim.api.nvim_create_autocmd('CursorMoved', {
+  --     group = 'lsp_document_highlight',
+  --     buffer = 0,
+  --     callback = vim.lsp.buf.clear_references,
+  --   })
+  -- end
 end
 
 local lsp_flags = {
@@ -91,8 +79,6 @@ lspconfig.lua_ls.setup {
   on_attach = on_attach, flags = lsp_flags, capabilities = capabilities
 }
 
-lspconfig.pyright.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
-lspconfig.tsserver.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 
 lspconfig.hls.setup {
   on_attach = on_attach,
@@ -109,18 +95,6 @@ lspconfig.hls.setup {
   }
 }
 
-lspconfig.jsonls.setup {
-  on_attach = on_attach, flags = lsp_flags, capabilities = capabilities
-}
-
-lspconfig.eslint.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
-
-lspconfig.elixirls.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
-
-lspconfig.erlangls.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
-lspconfig.elmls.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
-
-lspconfig.serve_d.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 
 lspconfig.purescriptls.setup {
   on_attach = on_attach,
@@ -135,11 +109,25 @@ lspconfig.purescriptls.setup {
   }
 }
 
-lspconfig.rust_analyzer.setup {
-  on_attach = on_attach, flags = lsp_flags, capabilities = capabilities
-}
+lspconfig.pyright.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
+
+lspconfig.tsserver.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
+
+lspconfig.rust_analyzer.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 
 lspconfig.clangd.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
+
+lspconfig.jsonls.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
+
+lspconfig.eslint.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
+
+lspconfig.elixirls.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
+
+lspconfig.erlangls.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
+
+lspconfig.elmls.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
+
+lspconfig.serve_d.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 
 local prettier = require("prettier")
 
@@ -196,6 +184,13 @@ vim.cmd [[autocmd BufWritePre *.elm lua vim.lsp.buf.format()]]
 
 -- Rust
 vim.cmd [[autocmd BufWritePre *.rs lua vim.lsp.buf.format()]]
+
+-- JavaScript
+vim.cmd [[autocmd BufWritePre *.js lua vim.lsp.buf.format()]]
+vim.cmd [[autocmd BufWritePre *.jsx lua vim.lsp.buf.format()]]
+vim.cmd [[autocmd BufWritePre *.ts lua vim.lsp.buf.format()]]
+vim.cmd [[autocmd BufWritePre *.tsx lua vim.lsp.buf.format()]]
+vim.cmd [[autocmd BufWritePre *.json lua vim.lsp.buf.format()]]
 
 local disable_auto_formatting = function()
   vim.cmd [[autocmd WinEnter <buffer> set eventignore+=BufWritePre]]

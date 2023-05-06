@@ -22,6 +22,7 @@ whichKey.register(
       },
     },
     ["-"] = { "<cmd>NERDTreeToggle<CR>", "Toggle NERDTree" },
+    ["<A-TAB>"] = { "<C-6>", "Switch to last open buffer" }
   },
   {}
 )

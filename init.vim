@@ -15,8 +15,9 @@ Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'williamboman/nvim-lsp-installer'
 Plug 'onsails/lspkind.nvim'
 Plug 'elmcast/elm-vim'
-
+Plug 'nvimdev/lspsaga.nvim'
 Plug 'towolf/vim-helm'
+
 " TypeScript extras
 Plug 'jose-elias-alvarez/null-ls.nvim'
 Plug 'MunifTanjim/prettier.nvim'
@@ -38,6 +39,7 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-treesitter/playground'
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 Plug 'p00f/nvim-ts-rainbow'
+Plug 'lukas-reineke/indent-blankline.nvim'
 
 " Misc. motions/text search
 Plug 'easymotion/vim-easymotion'
@@ -112,9 +114,6 @@ Plug 'mfussenegger/nvim-dap'
 Plug 'GoNZooo/nvim-dap-ui', { 'branch': 'gonz.fix-nil-index' }
 Plug 'theHamsta/nvim-dap-virtual-text'
 
-" Silly Python bullshit
-Plug 'ahmedkhalf/jupyter-nvim', { 'do': ':UpdateRemotePlugins' }
-
 " Comments
 Plug 'numToStr/Comment.nvim'
 
@@ -122,19 +121,11 @@ Plug 'numToStr/Comment.nvim'
 " Language-specific plugins
 """
 
-" D / DLang
-" Syntax-highlighting
-Plug 'JesseKPhillips/d.vim'
-
-" Dhall
-Plug 'vmchale/dhall-vim'
+" Silly Python bullshit
+Plug 'ahmedkhalf/jupyter-nvim', { 'do': ':UpdateRemotePlugins' }
 
 " PureScript
 Plug 'purescript-contrib/purescript-vim'
-
-" Clojure
-Plug 'tpope/vim-fireplace'
-
 call plug#end()
 
 set mouse=""
@@ -266,9 +257,6 @@ lua require("config")
 " Enable per-project configurations
 set exrc
 set secure
-
-" Nerd tree toggle
-nnoremap <C-t> :NERDTreeToggle<CR>
 
 set nocompatible
 
