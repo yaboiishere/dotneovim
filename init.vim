@@ -7,6 +7,10 @@ Plug 'nvim-lua/plenary.nvim'
 " Which-key
 Plug 'folke/which-key.nvim'
 
+" Splits
+Plug 'mrjones2014/smart-splits.nvim'
+Plug 'kwkarlwang/bufresize.nvim'
+
 " LSP
 Plug 'junnplus/lsp-setup.nvim'
 Plug 'neovim/nvim-lspconfig'
@@ -93,9 +97,6 @@ let g:rainbow_active = 1
 " org-mode
 Plug 'nvim-orgmode/orgmode'
 
-" Nicer quickfix
-Plug 'kevinhwang91/nvim-bqf'
-
 " Copilot
 Plug 'github/copilot.vim'
 
@@ -129,16 +130,16 @@ Plug 'ahmedkhalf/jupyter-nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'purescript-contrib/purescript-vim'
 call plug#end()
 
-set mouse=""
-
 " Colorscheme
 set background=dark
 syntax enable
 filetype plugin indent on
 
-" only enables termguicolors if we are not running urxvt
-if $TERM != 'rxvt-unicode-256color'
-  set termguicolors
+set termguicolors
+if $TERM_PROGRAM == 'tmux'
+  set mouse=a
+else
+  set mouse=""
 endif
 
 colorscheme night-owl 
@@ -271,3 +272,8 @@ set shortmess+=c
 set signcolumn=yes
 
 let g:elm_format_autosave = 1
+
+augroup highlight_yank
+    autocmd!
+    au TextYankPost * silent! lua vim.highlight.on_yank{higroup="IncSearch", timeout=700}
+augroup END
