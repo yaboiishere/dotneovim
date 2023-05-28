@@ -6,6 +6,10 @@ local telescope = require("telescope.builtin")
 
 local null_ls = require("null-ls")
 
+local elixir = require("elixir")
+local elixirls = require("elixir.elixirls")
+
+
 null_ls.setup({
   on_attach = function(client, _) -- client, bufnr
     if client.server_capabilities.documentFormattingProvider then
@@ -39,7 +43,6 @@ local on_attach = function(client, bufnr)
   vim.keymap.set("n", "<localleader>s", telescope.lsp_workspace_symbols, bufopts)
   vim.keymap.set("n", "<localleader>d", telescope.diagnostics, bufopts)
   vim.keymap.set("n", "gi", vim.lsp.buf.implementation, bufopts)
-  vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, bufopts)
   vim.keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, bufopts)
   vim.keymap.set("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, bufopts)
   vim.keymap.set("n", "<leader>wl", function()
@@ -47,24 +50,41 @@ local on_attach = function(client, bufnr)
   end, bufopts)
   vim.keymap.set("n", ",=", vim.lsp.buf.formatting, bufopts)
 
-  -- if client.resolved_capabilities.document_highlight then
-  --   vim.cmd [[
-  --     hi! LspReferenceRead cterm=bold ctermbg=235 guibg=LightYellow
-  --     hi! LspReferenceText cterm=bold ctermbg=235 guibg=LightYellow
-  --     hi! LspReferenceWrite cterm=bold ctermbg=235 guibg=LightYellow
-  --   ]]
-  --   vim.api.nvim_create_augroup('lsp_document_highlight', {})
-  --   vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-  --     group = 'lsp_document_highlight',
-  --     buffer = 0,
-  --     callback = vim.lsp.buf.document_highlight,
-  --   })
-  --   vim.api.nvim_create_autocmd('CursorMoved', {
-  --     group = 'lsp_document_highlight',
-  --     buffer = 0,
-  --     callback = vim.lsp.buf.clear_references,
-  --   })
-  -- end
+
+  vim.keymap.set("n", "<leader>fp", ":ElixirFromPipe<cr>", { buffer = true, noremap = true })
+  vim.keymap.set("n", "<leader>tp", ":ElixirToPipe<cr>", { buffer = true, noremap = true })
+  vim.keymap.set("v", "<leader>em", ":ElixirExpandMacro<cr>", { buffer = true, noremap = true })
+  vim.keymap.set("n", "<leader>tr", vim.lsp.codelens.run(), { buffer = true, noremap = true })
+
+  -- enable codelens
+
+  if client.resolved_capabilities.code_lens then
+    vim.cmd [[
+      augroup lsp_codelens
+        autocmd!
+        autocmd BufEnter,CursorHold,InsertLeave <buffer> lua vim.lsp.codelens.refresh()
+      augroup END
+    ]]
+  end
+
+  if client.resolved_capabilities.document_highlight then
+    vim.cmd [[
+      hi! LspReferenceRead cterm=bold ctermbg=235 guibg=LightYellow
+      hi! LspReferenceText cterm=bold ctermbg=235 guibg=LightYellow
+      hi! LspReferenceWrite cterm=bold ctermbg=235 guibg=LightYellow
+    ]]
+    vim.api.nvim_create_augroup('lsp_document_highlight', {})
+    vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+      group = 'lsp_document_highlight',
+      buffer = 0,
+      callback = vim.lsp.buf.document_highlight,
+    })
+    vim.api.nvim_create_autocmd('CursorMoved', {
+      group = 'lsp_document_highlight',
+      buffer = 0,
+      callback = vim.lsp.buf.clear_references,
+    })
+  end
 end
 
 local lsp_flags = {
@@ -74,6 +94,20 @@ local lsp_flags = {
 --
 -- Setup lspconfig.
 local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
+
+elixir.setup {
+  elixirls = {
+    cmd = "/home/misho/.local/share/nvim/lsp_servers/elixirls/elixir-ls/language_server.sh",
+
+    settings = elixirls.settings {
+      dialyzerEnabled = true,
+      fetchDeps = false,
+      enableTestLenses = true,
+      suggestSpecs = true,
+    },
+    on_attach = on_attach
+  }
+}
 
 lspconfig.lua_ls.setup {
   on_attach = on_attach, flags = lsp_flags, capabilities = capabilities
@@ -111,7 +145,8 @@ lspconfig.purescriptls.setup {
 
 lspconfig.pyright.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 
-lspconfig.tsserver.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
+lspconfig.tsserver.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities, filetypes = {
+  "typescript", "typescriptreact", "typescript.tsx" } }
 
 lspconfig.rust_analyzer.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 
@@ -121,7 +156,7 @@ lspconfig.jsonls.setup { on_attach = on_attach, flags = lsp_flags, capabilities 
 
 lspconfig.eslint.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 
-lspconfig.elixirls.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
+-- lspconfig.elixirls.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 
 lspconfig.erlangls.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 

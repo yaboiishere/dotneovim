@@ -18,7 +18,13 @@ Plug 'williamboman/mason.nvim'
 Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'williamboman/nvim-lsp-installer'
 Plug 'onsails/lspkind.nvim'
-Plug 'elmcast/elm-vim'
+Plug 'elixir-tools/elixir-tools.nvim'
+
+" Test coverage
+Plug 'nvim-lua/plenary.nvim'
+Plug 'andythigpen/nvim-coverage'
+
+" Plug 'elmcast/elm-vim'
 Plug 'nvimdev/lspsaga.nvim'
 Plug 'towolf/vim-helm'
 
@@ -136,6 +142,12 @@ syntax enable
 filetype plugin indent on
 
 set termguicolors
+
+if !has('gui_running') && &term =~ '^\%(screen\|tmux\)'
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+endif
+
 if $TERM_PROGRAM == 'tmux'
   set mouse=a
 else
@@ -270,8 +282,6 @@ set shortmess+=c
 
 " Reserve space for the errors
 set signcolumn=yes
-
-let g:elm_format_autosave = 1
 
 augroup highlight_yank
     autocmd!

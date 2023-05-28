@@ -20,3 +20,5 @@ require("comments")
 require("lsp_saga")
 require("indent_guides")
 require("smart_splits")
+
+require("coverage").setup()

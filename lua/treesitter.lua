@@ -19,6 +19,7 @@ require "nvim-treesitter.configs".setup {
     "heex",
     "eex",
     "erlang",
+    "elm"
   },
 
   sync_install = false,
