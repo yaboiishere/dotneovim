@@ -6,10 +6,6 @@ local telescope = require("telescope.builtin")
 
 local null_ls = require("null-ls")
 
-local elixir = require("elixir")
-local elixirls = require("elixir.elixirls")
-
-
 null_ls.setup({
   on_attach = function(client, _) -- client, bufnr
     if client.server_capabilities.documentFormattingProvider then
@@ -31,7 +27,6 @@ null_ls.setup({
 local on_attach = function(client, bufnr)
   -- Disable formatting for tsserver (this should be handled by null-ls)
   if client.name == "tsserver" then
-    client.resolved_capabilities.document_formatting = false
     client.resolved_capabilities.document_range_formatting = false
   end
 
@@ -95,20 +90,6 @@ local lsp_flags = {
 -- Setup lspconfig.
 local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
-elixir.setup {
-  elixirls = {
-    cmd = "/home/misho/.local/share/nvim/lsp_servers/elixirls/elixir-ls/language_server.sh",
-
-    settings = elixirls.settings {
-      dialyzerEnabled = true,
-      fetchDeps = false,
-      enableTestLenses = true,
-      suggestSpecs = true,
-    },
-    on_attach = on_attach
-  }
-}
-
 lspconfig.lua_ls.setup {
   on_attach = on_attach, flags = lsp_flags, capabilities = capabilities
 }
@@ -156,7 +137,13 @@ lspconfig.jsonls.setup { on_attach = on_attach, flags = lsp_flags, capabilities 
 
 lspconfig.eslint.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 
--- lspconfig.elixirls.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
+lspconfig.elixirls.setup {
+  on_attach = on_attach,
+  flags = lsp_flags,
+  capabilities = capabilities,
+  filetypes = { "elixir", "eelixir", "heex", "surface", "exs" },
+  settings = { elixirLS = { enableTestLenses = true } }
+}
 
 lspconfig.erlangls.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 
@@ -198,6 +185,9 @@ vim.cmd [[autocmd BufWritePre *.hrl lua vim.lsp.buf.format()]]
 -- Elixir
 vim.cmd [[autocmd BufWritePre *.ex lua vim.lsp.buf.format()]]
 vim.cmd [[autocmd BufWritePre *.exs lua vim.lsp.buf.format()]]
+vim.cmd [[autocmd BufWritePre *.eex lua vim.lsp.buf.format()]]
+vim.cmd [[autocmd BufWritePre *.leex lua vim.lsp.buf.format()]]
+vim.cmd [[autocmd BufWritePre *.heex lua vim.lsp.buf.format()]]
 
 -- Rust
 vim.cmd [[autocmd BufWritePre *.rs lua vim.lsp.buf.format()]]

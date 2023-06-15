@@ -1,3 +1,9 @@
+require("tree-sitter-just").setup({
+  highlight = {
+    enable = true,
+  },
+})
+
 require "nvim-treesitter.configs".setup {
   ensure_installed = {
     "haskell",

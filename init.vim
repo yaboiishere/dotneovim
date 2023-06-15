@@ -18,7 +18,6 @@ Plug 'williamboman/mason.nvim'
 Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'williamboman/nvim-lsp-installer'
 Plug 'onsails/lspkind.nvim'
-Plug 'elixir-tools/elixir-tools.nvim'
 
 " Test coverage
 Plug 'nvim-lua/plenary.nvim'
@@ -48,6 +47,7 @@ Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-treesitter/playground'
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
+Plug 'IndianBoy42/tree-sitter-just'
 Plug 'p00f/nvim-ts-rainbow'
 Plug 'lukas-reineke/indent-blankline.nvim'
 
@@ -128,6 +128,9 @@ Plug 'numToStr/Comment.nvim'
 """
 " Language-specific plugins
 """
+
+" Markdown
+Plug 'iamcco/markdown-preview.nvim'
 
 " Silly Python bullshit
 Plug 'ahmedkhalf/jupyter-nvim', { 'do': ':UpdateRemotePlugins' }
@@ -287,3 +290,11 @@ augroup highlight_yank
     autocmd!
     au TextYankPost * silent! lua vim.highlight.on_yank{higroup="IncSearch", timeout=700}
 augroup END
+
+let g:mkdp_browser = '/usr/bin/google-chrome-stable'
+let g:mkdp_echo_preview_url = 1
+
+" example
+nmap <C-s> <Plug>MarkdownPreview
+nmap <M-s> <Plug>MarkdownPreviewStop
+nmap <C-p> <Plug>MarkdownPreviewToggle
