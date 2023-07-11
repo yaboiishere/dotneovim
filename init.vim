@@ -14,9 +14,8 @@ Plug 'kwkarlwang/bufresize.nvim'
 " LSP
 Plug 'junnplus/lsp-setup.nvim'
 Plug 'neovim/nvim-lspconfig'
-Plug 'williamboman/mason.nvim'
+Plug 'williamboman/mason.nvim', { 'do': ':MasonUpdate' }
 Plug 'williamboman/mason-lspconfig.nvim'
-Plug 'williamboman/nvim-lsp-installer'
 Plug 'onsails/lspkind.nvim'
 
 " Test coverage
@@ -298,3 +297,8 @@ let g:mkdp_echo_preview_url = 1
 nmap <C-s> <Plug>MarkdownPreview
 nmap <M-s> <Plug>MarkdownPreviewStop
 nmap <C-p> <Plug>MarkdownPreviewToggle
+
+"" Set higher updaterate
+set updatetime=50
+set ttimeoutlen=0
+set switchbuf=usetab

@@ -1,7 +1,7 @@
-require("nvim-lsp-installer").setup {}
+require("mason").setup()
+require("mason-lspconfig").setup()
 
 local lspconfig = require("lspconfig")
-
 local telescope = require("telescope.builtin")
 
 local null_ls = require("null-ls")
@@ -126,23 +126,21 @@ lspconfig.purescriptls.setup {
 
 lspconfig.pyright.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 
-lspconfig.tsserver.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities, filetypes = {
-  "typescript", "typescriptreact", "typescript.tsx" } }
-
 lspconfig.rust_analyzer.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 
 lspconfig.clangd.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 
 lspconfig.jsonls.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 
-lspconfig.eslint.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
-
 lspconfig.elixirls.setup {
   on_attach = on_attach,
   flags = lsp_flags,
   capabilities = capabilities,
   filetypes = { "elixir", "eelixir", "heex", "surface", "exs" },
-  settings = { elixirLS = { enableTestLenses = true } }
+  settings = {
+    elixirLS = { enableTestLenses = true },
+    credo = { enabled = true }
+  }
 }
 
 lspconfig.erlangls.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
