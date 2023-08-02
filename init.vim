@@ -3,6 +3,7 @@ call plug#begin('~/.config/nvim/plugged')
 
 " Misc helper functions (dependency of popular plugins)
 Plug 'nvim-lua/plenary.nvim'
+Plug 'tpope/vim-dispatch'
 
 " Which-key
 Plug 'folke/which-key.nvim'
@@ -17,6 +18,7 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'williamboman/mason.nvim', { 'do': ':MasonUpdate' }
 Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'onsails/lspkind.nvim'
+Plug 'mfussenegger/nvim-lint'
 
 " Test coverage
 Plug 'nvim-lua/plenary.nvim'
@@ -136,6 +138,10 @@ Plug 'ahmedkhalf/jupyter-nvim', { 'do': ':UpdateRemotePlugins' }
 
 " PureScript
 Plug 'purescript-contrib/purescript-vim'
+
+" Ruby
+Plug 'tpope/vim-rails'
+Plug 'tpope/vim-bundler'
 call plug#end()
 
 " Colorscheme

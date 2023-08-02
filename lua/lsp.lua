@@ -1,10 +1,68 @@
 require("mason").setup()
-require("mason-lspconfig").setup()
+require("mason-lspconfig").setup {
+  ensure_installed = { "lua_ls", "tsserver", "tailwindcss", "elixirls", "rubocop", "solargraph", "ruby_ls" },
+}
 
 local lspconfig = require("lspconfig")
 local telescope = require("telescope.builtin")
-
 local null_ls = require("null-ls")
+local lint = require("lint")
+
+lint.linters_by_ft = {
+  javascript = { "eslint" },
+  typescript = { "eslint" },
+  typescriptreact = { "eslint" },
+  javascriptreact = { "eslint" },
+  lua = { "luacheck" },
+  elixir = { "credo" },
+  ruby = { "erb_lint", "rubocop" },
+  html = { "tidy" },
+  css = { "stylelint" }
+}
+
+
+local servers = {
+  tsserver = {
+    settings = {
+      typescript = {
+        inlayHints = {
+          includeInlayParameterNameHints = "literal",
+          includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+          includeInlayFunctionParameterTypeHints = false,
+          includeInlayVariableTypeHints = false,
+          includeInlayPropertyDeclarationTypeHints = false,
+          includeInlayFunctionLikeReturnTypeHints = true,
+          includeInlayEnumMemberValueHints = true,
+        },
+      },
+      javascript = {
+        inlayHints = {
+          includeInlayParameterNameHints = "all",
+          includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+          includeInlayFunctionParameterTypeHints = true,
+          includeInlayVariableTypeHints = true,
+          includeInlayPropertyDeclarationTypeHints = true,
+          includeInlayFunctionLikeReturnTypeHints = true,
+          includeInlayEnumMemberValueHints = true,
+        },
+      },
+    },
+  },
+  lua_ls = {
+    settings = { Lua = { diagnostics = { globals = { "vim" } } } },
+  },
+  tailwindcss = {
+    settings = {
+      tailwindCSS = {
+        experimental = {
+          classRegex = {
+            { "cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]" },
+          },
+        },
+      },
+    },
+  },
+}
 
 null_ls.setup({
   on_attach = function(client, _) -- client, bufnr
@@ -26,8 +84,8 @@ null_ls.setup({
 -- after the language server attaches to the current buffer
 local on_attach = function(client, bufnr)
   -- Disable formatting for tsserver (this should be handled by null-ls)
-  if client.name == "tsserver" then
-    client.resolved_capabilities.document_range_formatting = false
+  if client.name == 'tsserver' then
+    client.server_capabilities.documentFormattingProvider = false
   end
 
   -- Mappings.
@@ -126,11 +184,16 @@ lspconfig.purescriptls.setup {
 
 lspconfig.pyright.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 
+lspconfig.tsserver.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities, filetypes = {
+  "typescript", "typescriptreact", "typescript.tsx" }, settings = servers.tsserver.settings }
+
 lspconfig.rust_analyzer.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 
 lspconfig.clangd.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 
 lspconfig.jsonls.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
+
+lspconfig.eslint.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 
 lspconfig.elixirls.setup {
   on_attach = on_attach,
@@ -148,6 +211,30 @@ lspconfig.erlangls.setup { on_attach = on_attach, flags = lsp_flags, capabilitie
 lspconfig.elmls.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 
 lspconfig.serve_d.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
+
+lspconfig.tailwindcss.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities,
+  settings = servers.tailwindcss.settings }
+
+lspconfig.ruby_ls.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
+
+lspconfig.solargraph.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
+
+vim.opt.signcolumn = "yes"
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "ruby",
+  callback = function()
+    vim.lsp.start {
+      name = "rubocop",
+      cmd = { "bundle", "exec", "rubocop", "--lsp" },
+    }
+  end,
+})
+
+vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+  callback = function()
+    lint.try_lint()
+  end,
+})
 
 local prettier = require("prettier")
 
@@ -214,6 +301,10 @@ vim.cmd [[autocmd BufWritePre *.jsx lua vim.lsp.buf.format()]]
 vim.cmd [[autocmd BufWritePre *.ts lua vim.lsp.buf.format()]]
 vim.cmd [[autocmd BufWritePre *.tsx lua vim.lsp.buf.format()]]
 vim.cmd [[autocmd BufWritePre *.json lua vim.lsp.buf.format()]]
+
+-- Ruby
+vim.cmd [[autocmd BufWritePre *.rb lua vim.lsp.buf.format()]]
+vim.cmd [[autocmd BufWritePre *.erb lua vim.lsp.buf.format()]]
 
 local disable_auto_formatting = function()
   vim.cmd [[autocmd WinEnter <buffer> set eventignore+=BufWritePre]]
