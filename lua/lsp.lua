@@ -1,6 +1,6 @@
 require("mason").setup()
 require("mason-lspconfig").setup {
-  ensure_installed = { "lua_ls", "tsserver", "tailwindcss", "elixirls", "rubocop", "solargraph", "ruby_ls" },
+  ensure_installed = { "lua_ls", "tsserver", "tailwindcss", "elixirls", "solargraph", "ruby_ls" },
 }
 
 local lspconfig = require("lspconfig")
@@ -13,7 +13,7 @@ lint.linters_by_ft = {
   typescript = { "eslint" },
   typescriptreact = { "eslint" },
   javascriptreact = { "eslint" },
-  lua = { "luacheck" },
+  -- lua = { "luacheck" },
   elixir = { "credo" },
   ruby = { "erb_lint", "rubocop" },
   html = { "tidy" },
@@ -199,7 +199,7 @@ lspconfig.elixirls.setup {
   on_attach = on_attach,
   flags = lsp_flags,
   capabilities = capabilities,
-  filetypes = { "elixir", "eelixir", "heex", "surface", "exs" },
+  -- filetypes = { "elixir", "eelixir", "heex", "surface", "exs" },
   settings = {
     elixirLS = { enableTestLenses = true },
     credo = { enabled = true }

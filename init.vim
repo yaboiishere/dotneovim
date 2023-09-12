@@ -9,8 +9,8 @@ Plug 'tpope/vim-dispatch'
 Plug 'folke/which-key.nvim'
 
 " Splits
-Plug 'mrjones2014/smart-splits.nvim'
 Plug 'kwkarlwang/bufresize.nvim'
+Plug 'christoomey/vim-tmux-navigator'
 
 " LSP
 Plug 'junnplus/lsp-setup.nvim'
@@ -79,9 +79,9 @@ let g:airline_theme='deus'
 let g:airline_powerline_fonts = 1
 
 " File browsing, enhanced netrw
-Plug 'tpope/vim-vinegar'
-Plug 'scrooloose/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'nvim-tree/nvim-tree.lua'
+Plug 'nvim-tree/nvim-web-devicons'
+Plug 'stevearc/oil.nvim'
 
 " Jump to last position when reopening files
 Plug 'farmergreg/vim-lastplace'

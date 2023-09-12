@@ -50,7 +50,6 @@ whichKey.register(
       ["9"] = { function() starcraft.go_to_buffer("9") end, "Go to Starcraft buffer #9" },
       ["0"] = { function() starcraft.go_to_buffer("0") end, "Go to Starcraft buffer #10" },
     },
-    ["-"] = { "<cmd>NERDTreeToggle<CR>", "Toggle NERDTree" },
     ["<A-TAB>"] = { "<C-6>", "Switch to last open buffer" },
     ["<C-p>"] = { function() starcraft.pick_buffer() end, "Pick Starcraft buffer" },
   },
