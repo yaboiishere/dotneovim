@@ -23,7 +23,7 @@ require("oil").setup({
     foldcolumn = "0",
     spell = false,
     list = false,
-    conceallevel = 3,
+    conceallevel = 2,
     concealcursor = "n",
   },
   -- Restore window options to previous values when leaving an oil buffer

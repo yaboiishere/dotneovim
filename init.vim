@@ -320,3 +320,5 @@ nmap <C-p> <Plug>MarkdownPreviewToggle
 set updatetime=50
 set ttimeoutlen=0
 set switchbuf=usetab
+
+set conceallevel=1
