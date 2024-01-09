@@ -1,9 +1,9 @@
 local dap = require("dap")
 
 dap.adapters.haskell = {
-  type = "executable";
-  command = "haskell-debug-adapter";
-  args = { "--hackage-version=0.0.33.0" };
+  type = "executable",
+  command = "haskell-debug-adapter",
+  args = { "--hackage-version=0.0.39.0" },
 }
 dap.configurations.haskell = {
   {
@@ -12,17 +12,17 @@ dap.configurations.haskell = {
     name = "Debug",
     workspace = "${workspaceFolder}",
     startup = "${file}",
-    stopOnEntry = false,
+    stopOnEntry = true,
     logFile = vim.fn.stdpath("data") .. "/haskell-dap.log",
     logLevel = "WARNING",
     ghciEnv = vim.empty_dict(),
-    ghciPrompt = "Q> ",
-    ghciInitialPrompt = "Q> ",
+    ghciPrompt = "ghci> ",
+    ghciInitialPrompt = "ghci> ",
     ghciCmd = "stack ghci --test --no-load --no-build --main-is TARGET --ghci-options -fprint-evld-with-show",
-    mainArgs = function()
-      local argument_string = vim.fn.input("Arguments: ")
-      return argument_string
-    end,
+    -- mainArgs = function()
+    --   local argument_string = vim.fn.input("Arguments: ")
+    --   return argument_string
+    -- end,
   },
 }
 
@@ -71,8 +71,8 @@ dapui.setup({
     },
   },
   floating = {
-    max_height = nil, -- These can be integers or a float between 0 and 1.
-    max_width = nil, -- Floats will be treated as percentage of your screen.
+    max_height = nil,  -- These can be integers or a float between 0 and 1.
+    max_width = nil,   -- Floats will be treated as percentage of your screen.
     border = "single", -- Border style. Can be "single", "double" or "rounded"
     mappings = {
       close = { "q", "<Esc>" },

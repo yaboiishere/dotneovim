@@ -1,6 +1,11 @@
 " Plugins
 call plug#begin('~/.config/nvim/plugged')
 
+" Remote work plugin
+Plug 'kenn7/vim-arsync'
+" vim-arsync depedencies
+Plug 'prabirshrestha/async.vim'
+
 " Misc helper functions (dependency of popular plugins)
 Plug 'nvim-lua/plenary.nvim'
 Plug 'tpope/vim-dispatch'
@@ -19,6 +24,7 @@ Plug 'williamboman/mason.nvim', { 'do': ':MasonUpdate' }
 Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'onsails/lspkind.nvim'
 Plug 'mfussenegger/nvim-lint'
+Plug 'jubnzv/virtual-types.nvim'
 
 " Test coverage
 Plug 'nvim-lua/plenary.nvim'
@@ -65,7 +71,7 @@ Plug 'airblade/vim-gitgutter'
 
 " Fuzzy searching
 Plug 'nvim-telescope/telescope-fzf-native.nvim'
-Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.4' }
 
 Plug 'powerman/vim-plugin-AnsiEsc'
 
@@ -104,6 +110,8 @@ let g:rainbow_active = 1
 " org-mode
 Plug 'nvim-orgmode/orgmode'
 
+Plug 'epwalsh/obsidian.nvim'
+
 " Copilot
 Plug 'github/copilot.vim'
 
@@ -131,7 +139,7 @@ Plug 'numToStr/Comment.nvim'
 """
 
 " Markdown
-Plug 'iamcco/markdown-preview.nvim'
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' }
 
 " Silly Python bullshit
 Plug 'ahmedkhalf/jupyter-nvim', { 'do': ':UpdateRemotePlugins' }
@@ -142,6 +150,10 @@ Plug 'purescript-contrib/purescript-vim'
 " Ruby
 Plug 'tpope/vim-rails'
 Plug 'tpope/vim-bundler'
+
+" Odin
+Plug 'Tetralux/odin.vim'
+
 call plug#end()
 
 " Colorscheme

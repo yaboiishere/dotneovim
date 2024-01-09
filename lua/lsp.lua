@@ -7,6 +7,7 @@ local lspconfig = require("lspconfig")
 local telescope = require("telescope.builtin")
 local null_ls = require("null-ls")
 local lint = require("lint")
+local virtualtypes = require("virtualtypes")
 
 lint.linters_by_ft = {
   javascript = { "eslint" },
@@ -17,9 +18,10 @@ lint.linters_by_ft = {
   elixir = { "credo" },
   ruby = { "erb_lint", "rubocop" },
   html = { "tidy" },
-  css = { "stylelint" }
+  css = { "stylelint" },
+  gitcommit = { "gitlint" },
+  yaml = { "actionlint" },
 }
-
 
 local servers = {
   tsserver = {
@@ -101,6 +103,8 @@ local on_attach = function(client, bufnr)
   vim.keymap.set("n", "<leader>wl", function()
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, bufopts)
+
+  vim.keymap.set("n", "<leader>d", vim.lsp.buf.type_definition, bufopts)
   vim.keymap.set("n", ",=", vim.lsp.buf.formatting, bufopts)
 
 
@@ -108,6 +112,11 @@ local on_attach = function(client, bufnr)
   vim.keymap.set("n", "<leader>tp", ":ElixirToPipe<cr>", { buffer = true, noremap = true })
   vim.keymap.set("v", "<leader>em", ":ElixirExpandMacro<cr>", { buffer = true, noremap = true })
   vim.keymap.set("n", "<leader>tr", vim.lsp.codelens.run(), { buffer = true, noremap = true })
+
+  local opts = { noremap = true, silent = true }
+  vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, opts)
+  vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, opts)
+  vim.keymap.set("n", "<C-e>", vim.diagnostic.open_float, opts)
 
   -- enable codelens
 
@@ -138,6 +147,8 @@ local on_attach = function(client, bufnr)
       callback = vim.lsp.buf.clear_references,
     })
   end
+
+  virtualtypes.on_attach(client, bufnr)
 end
 
 local lsp_flags = {
@@ -191,8 +202,6 @@ lspconfig.rust_analyzer.setup { on_attach = on_attach, flags = lsp_flags, capabi
 
 lspconfig.clangd.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 
-lspconfig.jsonls.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
-
 lspconfig.eslint.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 
 lspconfig.elixirls.setup {
@@ -219,7 +228,10 @@ lspconfig.ruby_ls.setup { on_attach = on_attach, flags = lsp_flags, capabilities
 
 lspconfig.solargraph.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 
+lspconfig.ols.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
+
 vim.opt.signcolumn = "yes"
+
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "ruby",
   callback = function()
@@ -305,6 +317,9 @@ vim.cmd [[autocmd BufWritePre *.json lua vim.lsp.buf.format()]]
 -- Ruby
 vim.cmd [[autocmd BufWritePre *.rb lua vim.lsp.buf.format()]]
 vim.cmd [[autocmd BufWritePre *.erb lua vim.lsp.buf.format()]]
+
+-- Odin
+vim.cmd [[autocmd BufWritePre *.odin lua vim.lsp.buf.format {async = false}]]
 
 local disable_auto_formatting = function()
   vim.cmd [[autocmd WinEnter <buffer> set eventignore+=BufWritePre]]

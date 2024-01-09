@@ -2,36 +2,10 @@ local cmp = require("cmp")
 local lspkind = require("lspkind")
 
 cmp.setup({
-  formatting = {
-    fields = { "kind", "abbr", "menu" },
-    format = function(entry, vim_item)
-      local kind = lspkind.cmp_format({ mode = "symbol_text", maxwidth = 50 })(entry, vim_item)
-      local strings = vim.split(kind.kind, "%s", { trimempty = true })
-      kind.kind = " " .. strings[1] .. " "
-      if strings[2] then
-        kind.menu = "(" .. strings[2] .. ")"
-      end
-
-      -- If the entry comes via filetype 'purescript' we want to use the module source in the
-      -- completion menu.
-      if entry.context.filetype == "purescript" then
-        if entry.completion_item.labelDetails then
-          kind.menu = "(" .. entry.completion_item.labelDetails.description .. ")"
-        else
-        end
-      end
-
-      return kind
-    end,
-  },
   snippet = {
     expand = function(args)
       require("luasnip").lsp_expand(args.body)
     end,
-  },
-  window = {
-    -- completion = cmp.config.window.bordered(),
-    -- documentation = cmp.config.window.bordered(),
   },
   mapping = cmp.mapping.preset.insert({
     ["<C-b>"] = cmp.mapping.scroll_docs(-4),
@@ -42,7 +16,7 @@ cmp.setup({
     ["<C-e>"] = cmp.mapping.abort(),
     -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected
     -- items.
-    ["<CR>"] = cmp.mapping.confirm({ select = false }),
+    ["<CR>"] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false }),
   }),
   sources = cmp.config.sources({
     { name = "nvim_lsp" },
@@ -50,7 +24,15 @@ cmp.setup({
   }, {
     { name = "buffer" },
     { name = "path" },
-  })
+  }),
+  performance = {
+    debounce = 300,
+    throttle = 60,
+    fetching_timeout = 200,
+  },
+  formatting = {
+    format = lspkind.cmp_format({ with_text = true, maxwidth = 50 })
+  },
 })
 
 -- Set configuration for specific filetype.
@@ -69,14 +51,4 @@ cmp.setup.cmdline("/", {
     { name = "buffer" },
     { name = "orgmode" },
   }
-})
-
--- Use cmdline & path source for ":" (if you enabled `native_menu`, this won"t work anymore).
-cmp.setup.cmdline(":", {
-  mapping = cmp.mapping.preset.cmdline(),
-  sources = cmp.config.sources({
-    { name = "path" }
-  }, {
-    { name = "cmdline" }
-  })
 })
