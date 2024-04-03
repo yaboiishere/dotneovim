@@ -1,6 +1,6 @@
 require("telescope").setup {
   defaults = {
-    layout_strategy = "vertical",
+    layout_strategy = "flex",
     -- Default configuration for telescope goes here:
     -- config_key = value,
     mappings = {
@@ -25,9 +25,15 @@ require("telescope").setup {
       sort_lastused = true,
       theme = "dropdown",
       previewer = false,
+      history = {
+        path = "~/.local/share/nvim/history",
+        limit = 100
+      },
       mappings = {
         i = {
           ["<C-d>"] = "delete_buffer",
+          ["<C-Down>"] = require('telescope.actions').cycle_history_next,
+          ["<C-Up>"] = require('telescope.actions').cycle_history_prev
         },
         n = {
           dd = "delete_buffer",
@@ -45,11 +51,12 @@ require("telescope").setup {
   }
 }
 
-vim.keymap.set("n", "<leader>ff", "<cmd>Telescope find_files hidden=true no_ignore=true<CR>")
-vim.keymap.set("n", "<leader>gg", "<cmd>Telescope git_files<CR>")
-vim.keymap.set("n", "<leader>bb", "<cmd>Telescope buffers<CR>")
+vim.keymap.set("n", "<leader>f", "<cmd>Telescope find_files hidden=true no_ignore=true<CR>")
+vim.keymap.set("n", "<leader>g", "<cmd>Telescope git_files<CR>")
+vim.keymap.set("n", "<leader>b", "<cmd>Telescope buffers<CR>")
 vim.keymap.set("n", "<leader>/", "<cmd>Telescope live_grep<CR>")
 vim.keymap.set("n", "<leader>*", "<cmd>Telescope grep_string<CR>")
+vim.keymap.set("n", "<leader>c", "<cmd>Telescope colorscheme<CR>")
 vim.keymap.set("n", "<leader>hc", "<cmd>Telescope commands<CR>")
 vim.keymap.set("n", "<leader>hh", "<cmd>Telescope help_tags<CR>")
 vim.keymap.set("n", "<leader>Gc", "<cmd>Telescope git_commits<CR>")

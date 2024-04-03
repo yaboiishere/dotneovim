@@ -105,6 +105,7 @@ Plug 'chriskempson/base16-vim'
 Plug 'GoNZooo/jellybeans.vim'
 Plug 'haishanh/night-owl.vim'
 Plug 'luochen1990/rainbow'
+Plug 'folke/tokyonight.nvim'
 let g:rainbow_active = 1
 
 " org-mode
@@ -157,7 +158,7 @@ Plug 'Tetralux/odin.vim'
 call plug#end()
 
 " Colorscheme
-set background=dark
+" set background=dark
 syntax enable
 filetype plugin indent on
 
@@ -174,7 +175,7 @@ else
   set mouse=""
 endif
 
-colorscheme night-owl 
+colorscheme tokyonight
 
 " Sane tabs
 " - Two spaces wide
@@ -322,3 +323,14 @@ set ttimeoutlen=0
 set switchbuf=usetab
 
 set conceallevel=1
+
+function! ToggleGstatus() abort
+  for l:winnr in range(1, winnr('$'))
+    if !empty(getwinvar(l:winnr, 'fugitive_status'))
+      exe l:winnr 'close'
+      return
+    endif
+  endfor
+  keepalt Git
+endfunction
+nnoremap gs :call ToggleGstatus()<CR>

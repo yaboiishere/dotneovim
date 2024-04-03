@@ -5,10 +5,10 @@ require("obsidian").setup({
     -- the vault root is the parent directory of the `.obsidian` folder.
     -- You can also provide configuration overrides for each workspace through the `overrides` field.
     workspaces = {
-      {
-        name = "personal",
-        path = "~/vaults/personal",
-      },
+      -- {
+      --   name = "personal",
+      --   path = "~/vaults/personal",
+      -- },
       {
         name = "work",
         path = "~/vaults/work",

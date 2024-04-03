@@ -1,6 +1,6 @@
 require("mason").setup()
 require("mason-lspconfig").setup {
-  ensure_installed = { "lua_ls", "tsserver", "tailwindcss", "elixirls", "solargraph", "ruby_ls" },
+  ensure_installed = { "lua_ls", "tsserver", "tailwindcss", "elixirls", "solargraph", "ruby_ls", "eslint" },
 }
 
 local lspconfig = require("lspconfig")
@@ -14,13 +14,13 @@ lint.linters_by_ft = {
   typescript = { "eslint" },
   typescriptreact = { "eslint" },
   javascriptreact = { "eslint" },
-  -- lua = { "luacheck" },
+  lua = { "luacheck" },
   elixir = { "credo" },
   ruby = { "erb_lint", "rubocop" },
   html = { "tidy" },
   css = { "stylelint" },
   gitcommit = { "gitlint" },
-  yaml = { "actionlint" },
+  -- yaml = { "actionlint" },
 }
 
 local servers = {
@@ -77,9 +77,12 @@ null_ls.setup({
       vim.cmd("xnoremap <silent><buffer> <Leader>f :lua vim.lsp.buf.range_formatting({})<CR>")
     end
   end,
-  sources = {
-    null_ls.builtins.formatting.prettierd
-  },
+  -- sources = {
+  --   null_ls.builtins.formatting.prettierd
+  -- },
+  -- condition = function(utils)
+  --   return utils.has_file({ ".prettierrc.js" })
+  -- end,
 })
 
 -- Use an on_attach function to only map the following keys
@@ -103,6 +106,8 @@ local on_attach = function(client, bufnr)
   vim.keymap.set("n", "<leader>wl", function()
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, bufopts)
+
+  vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
 
   vim.keymap.set("n", "<leader>d", vim.lsp.buf.type_definition, bufopts)
   vim.keymap.set("n", ",=", vim.lsp.buf.formatting, bufopts)
@@ -197,12 +202,22 @@ lspconfig.pyright.setup { on_attach = on_attach, flags = lsp_flags, capabilities
 
 lspconfig.tsserver.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities, filetypes = {
   "typescript", "typescriptreact", "typescript.tsx" }, settings = servers.tsserver.settings }
-
 lspconfig.rust_analyzer.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 
 lspconfig.clangd.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 
-lspconfig.eslint.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
+-- lspconfig.eslint.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
+lspconfig.eslint.setup({
+  settings = {
+    packageManager = 'yarn'
+  },
+  on_attach = function(client, bufnr)
+    vim.api.nvim_create_autocmd("BufWritePre", {
+      buffer = bufnr,
+      command = "EslintFixAll",
+    })
+  end,
+})
 
 lspconfig.elixirls.setup {
   on_attach = on_attach,
@@ -248,23 +263,23 @@ vim.api.nvim_create_autocmd({ "BufWritePost" }, {
   end,
 })
 
-local prettier = require("prettier")
-
-prettier.setup({
-  bin = "prettierd",
-  filetypes = {
-    "css",
-    "graphql",
-    "html",
-    "javascript",
-    "javascriptreact",
-    "less",
-    "markdown",
-    "scss",
-    "typescript",
-    "typescriptreact",
-  },
-})
+-- local prettier = require("prettier")
+--
+-- prettier.setup({
+--   bin = "prettierd",
+--   filetypes = {
+--     "css",
+--     "graphql",
+--     "html",
+--     "javascript",
+--     "javascriptreact",
+--     "less",
+--     "markdown",
+--     "scss",
+--     "typescript",
+--     "typescriptreact",
+--   },
+-- })
 
 -- Lua
 vim.cmd [[autocmd BufWritePre *.lua lua vim.lsp.buf.format()]]

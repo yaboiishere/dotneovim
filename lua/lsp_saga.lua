@@ -25,7 +25,7 @@ keymap("n", "<leader>R", "<cmd>Lspsaga rename ++project<CR>")
 keymap("n", "gD", "<cmd>Lspsaga peek_definition<CR>")
 
 -- Go to definition
-keymap("n", "gd", "<cmd>Lspsaga goto_definition<CR>")
+-- keymap("n", "gd", "<cmd>Lspsaga goto_definition<CR>")
 -- Peek type definition
 -- You can edit the file containing the type definition in the floating window
 -- It also supports open/vsplit/etc operations, do refer to "definition_action_keys"
