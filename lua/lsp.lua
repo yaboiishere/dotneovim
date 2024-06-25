@@ -1,6 +1,6 @@
 require("mason").setup()
 require("mason-lspconfig").setup {
-  ensure_installed = { "lua_ls", "tsserver", "tailwindcss", "elixirls", "solargraph", "ruby_ls", "eslint" },
+  ensure_installed = { "lua_ls", "tsserver", "tailwindcss", "elixirls", "solargraph", "ruby_lsp", "eslint" },
 }
 
 local lspconfig = require("lspconfig")
@@ -236,10 +236,10 @@ lspconfig.elmls.setup { on_attach = on_attach, flags = lsp_flags, capabilities =
 
 lspconfig.serve_d.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 
-lspconfig.tailwindcss.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities,
-  settings = servers.tailwindcss.settings }
+-- lspconfig.tailwindcss.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities,
+--   settings = servers.tailwindcss.settings }
 
-lspconfig.ruby_ls.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
+lspconfig.ruby_lsp.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 
 lspconfig.solargraph.setup { on_attach = on_attach, flags = lsp_flags, capabilities = capabilities }
 

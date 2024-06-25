@@ -1,6 +1,6 @@
 require("telescope").setup {
   defaults = {
-    layout_strategy = "flex",
+    layout_strategy = "vertical",
     -- Default configuration for telescope goes here:
     -- config_key = value,
     mappings = {

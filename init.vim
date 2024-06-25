@@ -66,6 +66,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-commentary'
 Plug 'int3/vim-extradite'
+Plug 'echasnovski/mini.map', { 'branch': 'stable' }
 
 Plug 'airblade/vim-gitgutter'
 
