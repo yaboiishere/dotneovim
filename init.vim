@@ -9,6 +9,7 @@ Plug 'prabirshrestha/async.vim'
 " Misc helper functions (dependency of popular plugins)
 Plug 'nvim-lua/plenary.nvim'
 Plug 'tpope/vim-dispatch'
+Plug 'echasnovski/mini.map'
 
 " Which-key
 Plug 'folke/which-key.nvim'
@@ -66,7 +67,9 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-commentary'
 Plug 'int3/vim-extradite'
-Plug 'echasnovski/mini.map', { 'branch': 'stable' }
+Plug 'kevinhwang91/promise-async'
+Plug 'kevinhwang91/nvim-ufo'
+
 
 Plug 'airblade/vim-gitgutter'
 
@@ -335,3 +338,4 @@ function! ToggleGstatus() abort
   keepalt Git
 endfunction
 nnoremap gs :call ToggleGstatus()<CR>
+
